@@ -153,13 +153,18 @@ const login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-
+    console.log(token,"|||||||||||||||||||||||||||||||||||||||||");
+    
     res.cookie("architectToken", token, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
       maxAge: 60 * 60 * 1000,
     });
+
+
+
+
 
     res.status(200).json({
       message: "Login successful",
@@ -187,7 +192,78 @@ const login = async (req, res, next) => {
   }
 };
 
+// const logout = async (req, res) => {
+//   try {
+//     const token = req.cookies?.architectToken || req.cookies?.token || req.cookies?.visitorToken;
+
+//     if (token) {
+//       // Optionally, you can verify the token here
+//       jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//         if (err) {
+//           console.log("Token verification failed:", err);
+//         } else {
+//           console.log("Token verified successfully:", decoded);
+//         }
+//       });
+//     }
+//     res.clearCookie("architectToken");
+//     res.status(200).json({ message: "Logout successful" });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Logout error");
+//   }
+// };
+
+// const jwt = require("jsonwebtoken");
+
+const logout = async (req, res) => {
+  try {
+    // Step 1: Debug incoming cookies
+    console.log("Received cookies:", req.cookies);
+
+    // Step 2: Get token from cookies
+    const token =
+      req.cookies?.architectToken ||
+      req.cookies?.token ||
+      req.cookies?.visitorToken;
+
+    console.log("Logout token:", token);
+
+    // Step 3: Verify token (optional)
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Token verified:", decoded);
+      } catch (err) {
+        console.log("Token verification failed:", err.message);
+      }
+    }
+
+    // Step 4: Define cookie options
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // or set to true temporarily for testing
+      sameSite: "strict",
+      path: "/",
+    };
+
+    // Step 5: Clear all expected cookies
+    const cookiesToClear = ["architectToken", "token", "visitorToken"];
+    cookiesToClear.forEach((cookie) => {
+      console.log(`Clearing cookie: ${cookie}`);
+      res.clearCookie(cookie, cookieOptions);
+    });
+
+    // Step 6: Return response
+    res.status(200).json({ message: "Logout successful" });
+  } catch (err) {
+    console.error("Logout error:", err);
+    res.status(500).send("Logout error");
+  }
+};
+
 module.exports = {
   signUp,
   login,
+  logout,
 };

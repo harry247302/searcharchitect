@@ -30,7 +30,7 @@ import toast from "react-hot-toast";
 //   useGetOtpQuery,
 // } from "@/app/redux/slices/getOtp/GetOtp";
 import { GoogleLogin } from "@react-oauth/google";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Tooltip,
   TooltipContent,
@@ -40,6 +40,7 @@ import {
 import { getVisitorById, visitorGoogleLogin, visitorLogin, visitorSignUp } from "@/app/redux/slices/visitorSlice/VisitorAuth";
 import { getOtp } from "@/app/redux/slices/getOtp/GetOtp";
 import { useDispatch, useSelector } from "react-redux";
+import useHandleLogout from "@/utils/logoutHandler";
 
 const components = [
   {
@@ -63,10 +64,13 @@ const components = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
   const pathname = usePathname();
-  const isAdminPage = pathname.startsWith("/admin") || pathname.startsWith("/architect");
+  const isAdminPage = pathname.startsWith("/admin") || pathname.startsWith("/architect");;
   const visitor = useSelector(state => state.visitor.visitorInfo)
+  // console.log(visitor,"-------------------------------");
 
+  // navbar scroll hide code 
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   // const state = useSelector(state => state)
@@ -101,7 +105,6 @@ export default function Navbar() {
 
 
 
-  // const router = useRouter();
   const dispatch = useDispatch()
   const [isOpen, setIsOpen] = React.useState(false);
   const [form, setform] = React.useState({ email: "", password: "" });
@@ -279,28 +282,30 @@ export default function Navbar() {
     }
   };
 
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
+  // const handleLogout = () => {
+  //   const confirmLogout = window.confirm("Are you sure you want to logout?");
 
-    if (!confirmLogout) return;
+  //   if (!confirmLogout) return;
 
-    Cookies.remove("visitorToken");
-    setVisitorData(null);
-    toast.success("Logged out successfully");
-    window.location.href = "/";
-  };
+  //   Cookies.remove("visitorToken");
+  //   setVisitorData(null);
+  //   toast.success("Logged out successfully");
+  //   window.location.href = "/";
+  // };
+
+  const handleLogout = useHandleLogout();
+  // fetchVisitors();
+
 
 
   return (
     <nav
-
       style={{ borderBottom: "1px solid rgba(179, 119, 54, 0.16)" }}
       // className=" w-full px-4 py-3 sticky top-0 z-50 backdrop-blur-md bg-[#ffffffa8]"
 
       className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-in-out 
-  ${show ? "translate-y-0" : "-translate-y-full"} 
-  backdrop-blur-md bg-[#ffffffa8] 
-  ${isAdminPage ? "hidden" : ""}`}
+        ${isAdminPage ? "hidden" : show ? "translate-y-0" : "-translate-y-full"} 
+        backdrop-blur-md bg-[#ffffffa8]`}
     >
       <div className="scale-container max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
@@ -388,7 +393,7 @@ export default function Navbar() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            onClick={handleLogout}
+                            onClick={() => handleLogout("/")}
                             className="cursor-pointer ml-5 text-primary hover:text-red-500"
                           >
                             <LogOut className="w-5 h-5" />

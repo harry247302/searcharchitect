@@ -34,7 +34,9 @@ import {
   Ticket,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+// import { architectLogout } from "@/app/redux/slices/architectSlice/ArchitectAuth";
+import useHandleLogout from "@/utils/logoutHandler";
 
 const Sidebar = ({
   activeSection,
@@ -47,14 +49,18 @@ const Sidebar = ({
   const [isOpen, setIsOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [openDropdown, setOpenDropdown] = useState();
-  const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (!confirmed) return;
-    document.cookie = "architectToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie =
-      "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    router.push("/pages/architect-login");
-  };
+  // const handleLogout = () => {
+  //   const confirmed = window.confirm("Are you sure you want to logout?");
+  //   if (!confirmed) return;
+  //   document.cookie = "architectToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+  //   document.cookie =
+  //     "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+  //   router.push("/pages/architect-login");
+  // };
+
+  //  const dispatch = useDispatch();
+  const handleLogout = useHandleLogout();
+
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", href: "architect", icon: Home },
@@ -230,7 +236,7 @@ const Sidebar = ({
         {/* Footer */}
 
         <div
-          onClick={handleLogout} // your logout function here
+          onClick={() => handleLogout("/pages/architect-login")} // your logout function here
           className="cursor-pointer p-3 px-5 border-t border-gray-200 hover:bg-secondary-foreground transition-colors duration-300 flex items-center gap-2 text-amber-100"
           title="Logout"
         >

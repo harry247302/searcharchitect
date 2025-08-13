@@ -4,28 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import projects from '@/static-data/projects'
 import { Card, CardContent } from '@/components/ui/card'
-import { useEffect, useState } from 'react'
-import { recentProjects } from '@/app/redux/slices/projectSlice/ProjectSlice'
-import { useDispatch } from 'react-redux'
 
 export default function Projects() {
-  const dispatch = useDispatch()
-  const [projects, setProjects] = useState()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await dispatch(recentProjects()).unwrap();
-        setProjects(res?.data)
-
-
-      } catch (error) {
-        console.error("Error fetching recent projects:", error);
-      }
-    };
-    fetchData();
-  }, [dispatch]);
-  console.log("Fetched projects::::::::::::::::::::::::::::", projects);
-
   return (
     <section className="w-full bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -40,13 +20,18 @@ export default function Projects() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {projects?.map((project) => (
+          {projects.map((project) => (
             <Card
-              key={project.project_uuid}
+              key={project.id}
               className="relative group overflow-hidden rounded-2xl shadow-lg h-[300px] bg-gray-100"
             >
               <div className="absolute inset-0 z-0">
-                <img src={project.images[0]} alt="" />
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-black/40" />
               </div>
 

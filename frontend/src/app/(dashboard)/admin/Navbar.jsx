@@ -14,8 +14,21 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
+import useHandleLogout from '@/utils/logoutHandler';
 
 const Navbar = ({ activeSection, setActiveSection, setSidebarCollapsed, sidebarCollapsed }) => {
   const router = useRouter();
@@ -23,38 +36,41 @@ const Navbar = ({ activeSection, setActiveSection, setSidebarCollapsed, sidebarC
   const [collapsed, setCollapsed] = useState(false); // Desktop collapse
   const admin = useSelector(state => state?.admin?.admin)
 
-const clearAllCookies = () => {
-  const cookies = document.cookie.split(';').map(c => c.trim());
-  const hostname = window.location.hostname;
-  const domainParts = hostname.split('.');
-  const domain = domainParts.length > 1 ? '.' + domainParts.slice(-2).join('.') : hostname;
-  const paths = ['/', '/admin', '/user', window.location.pathname];
+  const clearAllCookies = () => {
+    const cookies = document.cookie.split(';').map(c => c.trim());
+    const hostname = window.location.hostname;
+    const domainParts = hostname.split('.');
+    const domain = domainParts.length > 1 ? '.' + domainParts.slice(-2).join('.') : hostname;
+    const paths = ['/', '/admin', '/user', window.location.pathname];
 
-  for (const cookie of cookies) {
-    const eqPos = cookie.indexOf('=');
-    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    for (const cookie of cookies) {
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
 
-    paths.forEach(path => {
-      // Without domain
-      document.cookie = `${name}=; path=${path}; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-      // With root domain
-      document.cookie = `${name}=; path=${path}; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-      // With hostname domain
-      document.cookie = `${name}=; path=${path}; domain=${hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-    });
-  }
-};
-
-  const handleLogout = () => {
-    const confirmed = window.confirm('Are you sure you want to logout?');
-    if (!confirmed) return;
-
-    clearAllCookies();
-    localStorage.clear();
-    sessionStorage.clear();
-
-    router.push('/admin-login');
+      paths.forEach(path => {
+        // Without domain
+        document.cookie = `${name}=; path=${path}; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+        // With root domain
+        document.cookie = `${name}=; path=${path}; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+        // With hostname domain
+        document.cookie = `${name}=; path=${path}; domain=${hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+      });
+    }
   };
+
+  // const handleLogout = () => {
+  //   const confirmed = window.confirm('Are you sure you want to logout?');
+  //   if (!confirmed) return;
+
+  //   clearAllCookies();
+  //   localStorage.clear();
+  //   sessionStorage.clear();
+
+  //   router.push('/admin-login');
+  // };
+
+  const handleLogout = useHandleLogout();
+
 
 
 
@@ -136,13 +152,12 @@ const clearAllCookies = () => {
             })}
           </ul>
         </nav>
-        {/* <div className={`p-4 px-5 border-t border-slate-700 hover:bg-slate-800 transition-colors duration-300`}> */}
-        <div
-          onClick={handleLogout} // your logout function here
+
+        {/* <div
+          onClick={handleLogout} 
           className="cursor-pointer p-3 px-5 border-t border-slate-700  hover:bg-[#2b7fff] transition-colors duration-300 flex items-center gap-2 text-amber-100"
           title="Logout"
         >
-          {/* Optional icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -159,7 +174,45 @@ const clearAllCookies = () => {
           </svg>
 
           <span className="font-medium">Logout</span>
-        </div>
+        </div> */}
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <div
+              className="cursor-pointer p-3 px-5 border-t border-slate-700 hover:bg-[#2b7fff] transition-colors duration-300 flex items-center gap-2 text-amber-100"
+              title="Logout"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"
+                />
+              </svg>
+              <span className="font-medium">Logout</span>
+            </div>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You will need to sign in again to access your account.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         {/* </div> */}
 
         {/* Footer */}

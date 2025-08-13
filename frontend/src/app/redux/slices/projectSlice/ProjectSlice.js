@@ -73,25 +73,6 @@ export const get_projects_by_architect = createAsyncThunk(
 
 
 
-export const recentProjects = createAsyncThunk(
-  'projects/recentProjects',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/projects/recent_project`,
-        { withCredentials: true }
-      );
-      return response.data
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || error.message || 'Failed to fetch projects'
-      );
-    }
-  }
-);
-
-
-
 const initialState = {
   projects: [],       // list of projects for get_projects_by_architect
   addedProject: null, // newly added project for addProject
@@ -133,21 +114,7 @@ const projectSlice = createSlice({
       .addCase(get_projects_by_architect.rejected, (state, action) => {
         state.loadingFetch = false;
         state.errorFetch = action.payload || 'Failed to fetch projects';
-      })
-
-      // //recent
-      // .addCase(recentProjects.pending, (state) => {
-      //   state.loadingFetch = true;
-      //   state.errorFetch = null;
-      // })
-      // .addCase(recentProjects.fulfilled, (state, action) => {
-      //   state.loadingFetch = false;
-      //   state.projects = action.payload;
-      // })
-      // .addCase(recentProjects.rejected, (state, action) => {
-      //   state.loadingFetch = false;
-      //   state.errorFetch = action.payload || 'Failed to fetch projects';
-      // });
+      });
   },
 });
 

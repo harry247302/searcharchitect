@@ -342,10 +342,7 @@ const Main = () => {
                   ))
                 ) : (
 
-                  <tr className="text-center text-gray-400">
-                    <td colSpan="5">Data not found</td>
-                  </tr>
-
+                  <tr className='text-center text-gray-400'>Data not found</tr>
                 )
               }
               {/* {filteredArchitects.length === 0 && (
