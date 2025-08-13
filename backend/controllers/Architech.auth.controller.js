@@ -154,17 +154,10 @@ const login = async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
-    // res.cookie("architectToken", token, {
-    //   httpOnly: false,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "Strict",
-    //   maxAge: 60 * 60 * 1000,
-    // });
-
     res.cookie("architectToken", token, {
       httpOnly: false,
-      secure: false, // set to true in HTTPS/production
-      sameSite: "None", // ✅ cross-origin cookies allowed
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
       maxAge: 60 * 60 * 1000,
     });
 
