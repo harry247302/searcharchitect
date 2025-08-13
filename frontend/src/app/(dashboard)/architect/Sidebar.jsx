@@ -50,7 +50,7 @@ const Sidebar = ({
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (!confirmed) return;
-    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "architectToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     document.cookie =
       "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     router.push("/pages/architect-login");
