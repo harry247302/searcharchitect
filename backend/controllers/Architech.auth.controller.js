@@ -214,7 +214,7 @@ const login = async (req, res, next) => {
 //   }
 // };
 
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
 const logout = async (req, res) => {
   try {

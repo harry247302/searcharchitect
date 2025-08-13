@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useDispatch } from "react-redux";
 
-const useHandleLogout = (redirectTo = "/") => {
+const useHandleLogout = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -12,7 +12,7 @@ const useHandleLogout = (redirectTo = "/") => {
       const res = await dispatch(architectLogout()).unwrap();
       console.log(res, "--------------------------------------------");
         window.location.reload()
-      router.push(redirectTo);
+    //   router.push(redirectTo);
     } catch (error) {
       console.error("Logout failed:", error);
     }
