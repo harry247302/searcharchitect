@@ -40,6 +40,7 @@ import {
 import { getVisitorById, visitorGoogleLogin, visitorLogin, visitorSignUp } from "@/app/redux/slices/visitorSlice/VisitorAuth";
 import { getOtp } from "@/app/redux/slices/getOtp/GetOtp";
 import { useDispatch, useSelector } from "react-redux";
+import useHandleLogout from "@/utils/logoutHandler";
 
 const components = [
   {
@@ -280,16 +281,20 @@ export default function Navbar() {
     }
   };
 
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
+  // const handleLogout = () => {
+  //   const confirmLogout = window.confirm("Are you sure you want to logout?");
 
-    if (!confirmLogout) return;
+  //   if (!confirmLogout) return;
 
-    Cookies.remove("visitorToken");
-    setVisitorData(null);
-    toast.success("Logged out successfully");
-    window.location.href = "/";
-  };
+  //   Cookies.remove("visitorToken");
+  //   setVisitorData(null);
+  //   toast.success("Logged out successfully");
+  //   window.location.href = "/";
+  // };
+
+const handleLogout = useHandleLogout();
+// fetchVisitors();
+
 
 
   return (
@@ -386,7 +391,7 @@ export default function Navbar() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            onClick={handleLogout}
+                            onClick={() => handleLogout("/")}
                             className="cursor-pointer ml-5 text-primary hover:text-red-500"
                           >
                             <LogOut className="w-5 h-5" />
@@ -692,7 +697,7 @@ export default function Navbar() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            onClick={handleLogout}
+                            onClick={() => handleLogout("/")}
                             className="cursor-pointer ml-5 text-primary hover:text-red-500"
                           >
                             <LogOut className="w-5 h-5" />
