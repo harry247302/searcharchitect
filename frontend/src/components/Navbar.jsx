@@ -30,7 +30,7 @@ import toast from "react-hot-toast";
 //   useGetOtpQuery,
 // } from "@/app/redux/slices/getOtp/GetOtp";
 import { GoogleLogin } from "@react-oauth/google";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Tooltip,
   TooltipContent,
@@ -63,7 +63,9 @@ const components = [
 ];
 
 export default function Navbar() {
-
+  const router = useRouter();
+  const pathname = usePathname();
+  const isAdminPage = pathname.startsWith("/admin") || pathname.startsWith("/architect");;
   const visitor = useSelector(state => state.visitor.visitorInfo)
   // console.log(visitor,"-------------------------------");
 
@@ -102,7 +104,6 @@ export default function Navbar() {
 
 
 
-  // const router = useRouter();
   const dispatch = useDispatch()
   const [isOpen, setIsOpen] = React.useState(false);
   const [form, setform] = React.useState({ email: "", password: "" });
@@ -297,8 +298,9 @@ export default function Navbar() {
       style={{ borderBottom: "1px solid rgba(179, 119, 54, 0.16)" }}
       // className=" w-full px-4 py-3 sticky top-0 z-50 backdrop-blur-md bg-[#ffffffa8]"
 
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-in-out ${show ? "translate-y-0" : "-translate-y-full"
-        } backdrop-blur-md bg-[#ffffffa8]`}
+      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-in-out 
+        ${isAdminPage ? "hidden" : show ? "translate-y-0" : "-translate-y-full"} 
+        backdrop-blur-md bg-[#ffffffa8]`}
     >
       <div className="scale-container max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
@@ -683,88 +685,88 @@ export default function Navbar() {
                 <Link href="/others">Others</Link>
 
                 <NavigationMenuItem className="bg-transparent hover:bg-transparent list-none">
-                {visitor?.fullname ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-800">
-                      Hi, {visitor?.fullname}
-                    </span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={handleLogout}
-                            className="cursor-pointer ml-5 text-primary hover:text-red-500"
-                          >
-                            <LogOut className="w-5 h-5" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Logout</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                ) : (
-                  <Button
-                    className="px-4 py-2 bg-primary text-white font-semibold rounded-md text-sm hover:bg-amber-950 transition"
-                    onClick={() => setShowModal(true)}
-                  >
-                    Login / Sign Up
-                  </Button>
-                )}
+                  {visitor?.fullname ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-800">
+                        Hi, {visitor?.fullname}
+                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={handleLogout}
+                              className="cursor-pointer ml-5 text-primary hover:text-red-500"
+                            >
+                              <LogOut className="w-5 h-5" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Logout</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  ) : (
+                    <Button
+                      className="px-4 py-2 bg-primary text-white font-semibold rounded-md text-sm hover:bg-amber-950 transition"
+                      onClick={() => setShowModal(true)}
+                    >
+                      Login / Sign Up
+                    </Button>
+                  )}
 
-                {/* Modal */}
-                {showModal && (
-                  <div
-                    style={{ backgroundColor: "rgb(194 149 100 / 33%)" }}
-                    className="fixed   inset-0 bg-opacity-50 flex items-center justify-center w-[100%] h-[115vh] z-50"
-                  >
-                    <div className=" bg-white flex items-center justify-center  rounded-[40px] shadow-xl   relative">
-                      {/* login in form */}
+                  {/* Modal */}
+                  {showModal && (
+                    <div
+                      style={{ backgroundColor: "rgb(194 149 100 / 33%)" }}
+                      className="fixed   inset-0 bg-opacity-50 flex items-center justify-center w-[100%] h-[115vh] z-50"
+                    >
+                      <div className=" bg-white flex items-center justify-center  rounded-[40px] shadow-xl   relative">
+                        {/* login in form */}
 
-                      {/* signup form */}
-                      {isOpen ? (
-                        <StyledWrapper>
-                          <div className="container ">
-                            <div className="heading">Sign In</div>
-                            <form onSubmit={handleSubmit} className="form">
-                              <input
-                                onChange={(e) => {
-                                  setform((prev) => ({
-                                    ...prev,
-                                    email: e.target.value,
-                                  }));
-                                }}
-                                required
-                                className="input"
-                                type="email"
-                                name="email"
-                                id="email"
-                                placeholder="E-mail"
-                              />
-                              <input
-                                onChange={(e) => {
-                                  setform((prev) => ({
-                                    ...prev,
-                                    password: e.target.value,
-                                  }));
-                                }}
-                                required
-                                className="input"
-                                type="password"
-                                name="password"
-                                id="password"
-                                placeholder="Password"
-                              />
-                              <span className="forgot-password">
-                                <a href="#">Forgot Password ?</a>
-                              </span>
-                              <input className="login-button" type="submit" />
-                            </form>
-                            <div className="social-account-container">
-                              {/* <span className="title"></span> */}
-                              <div className="social-accounts">
-                                {/* <button className="social-button google">
+                        {/* signup form */}
+                        {isOpen ? (
+                          <StyledWrapper>
+                            <div className="container ">
+                              <div className="heading">Sign In</div>
+                              <form onSubmit={handleSubmit} className="form">
+                                <input
+                                  onChange={(e) => {
+                                    setform((prev) => ({
+                                      ...prev,
+                                      email: e.target.value,
+                                    }));
+                                  }}
+                                  required
+                                  className="input"
+                                  type="email"
+                                  name="email"
+                                  id="email"
+                                  placeholder="E-mail"
+                                />
+                                <input
+                                  onChange={(e) => {
+                                    setform((prev) => ({
+                                      ...prev,
+                                      password: e.target.value,
+                                    }));
+                                  }}
+                                  required
+                                  className="input"
+                                  type="password"
+                                  name="password"
+                                  id="password"
+                                  placeholder="Password"
+                                />
+                                <span className="forgot-password">
+                                  <a href="#">Forgot Password ?</a>
+                                </span>
+                                <input className="login-button" type="submit" />
+                              </form>
+                              <div className="social-account-container">
+                                {/* <span className="title"></span> */}
+                                <div className="social-accounts">
+                                  {/* <button className="social-button google">
                                   <svg
                                     viewBox="0 0 488 512"
                                     height="1em"
@@ -774,184 +776,184 @@ export default function Navbar() {
                                     <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
                                   </svg>
                                 </button> */}
-                                <GoogleLogin
-                                  onSuccess={handleGoogleLogin}
-                                  onError={handleGoogleLogin}
-                                  type="icon"
-                                  theme="filled_black"
-                                  size="large"
-                                  shape="circle"
-                                />
+                                  <GoogleLogin
+                                    onSuccess={handleGoogleLogin}
+                                    onError={handleGoogleLogin}
+                                    type="icon"
+                                    theme="filled_black"
+                                    size="large"
+                                    shape="circle"
+                                  />
+                                </div>
                               </div>
-                            </div>
-                            <span
-                              className="agreement"
-                              onClick={() => setIsOpen(false)}
-                            >
-                              <a>Create your account</a>
-                            </span>
-                            <Button
-                              style={{
-                                background:
-                                  "linear-gradient(0deg, rgba(190, 142, 90, 0.16) 0%, rgba(190, 142, 90, 0.08) 100%)",
-                                cursor: "pointer",
-                                fontWeight: "bold",
-                                borderRadius: "60%",
-                                marginTop: "10px",
-                                width: "30px",
-                                height: "30px",
-                              }}
-                              onClick={() => setShowModal(false)}
-                              className="top-[10px] right-[20px] absolute"
-                            >
-                              X
-                            </Button>
-                          </div>
-                        </StyledWrapper>
-                      ) : (
-                        <StyledWrapper>
-                          <div className="container">
-                            <div className="heading">Sign Up</div>
-                            <form onSubmit={handleSubmit1} className="form">
-                              <div className="flex gap-4">
-                                <input
-                                  onChange={(e) =>
-                                    setSignUpForm((prev) => ({
-                                      ...prev,
-                                      fullname: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                  className="input flex-1"
-                                  type="text"
-                                  name="name"
-                                  id="name"
-                                  placeholder="Full Name"
-                                />
-                                <input
-                                  onChange={(e) =>
-                                    setSignUpForm((prev) => ({
-                                      ...prev,
-                                      phone_number: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                  className="input flex-1"
-                                  type="tel"
-                                  name="phone"
-                                  id="phone"
-                                  placeholder="Phone Number"
-                                />
-                              </div>
-
-                              <input
-                                onChange={(e) =>
-                                  setSignUpForm((prev) => ({
-                                    ...prev,
-                                    email: e.target.value,
-                                  }))
-                                }
-                                required
-                                className="input"
-                                type="email"
-                                name="email"
-                                id="email"
-                                placeholder="E-mail"
-                              />
-
-                              <input
-                                onChange={(e) =>
-                                  setSignUpForm((prev) => ({
-                                    ...prev,
-                                    password: e.target.value,
-                                  }))
-                                }
-                                required
-                                className="input"
-                                type="password"
-                                name="password"
-                                id="password"
-                                placeholder="Password"
-                              />
-
-                              <div className="flex gap-4">
-                                <input
-                                  required
-                                  className="input flex-1"
-                                  type="number"
-                                  name="otp"
-                                  id="otp"
-                                  onChange={(e) =>
-                                    setVerfiyOtp((prev) => ({
-                                      ...prev,
-                                      verifiyOtp: e.target.value,
-                                    }))
-                                  }
-                                  // onChange={()=>{setVerfiyOtp}}
-                                  placeholder="Enter OTP"
-                                  style={{ height: "60px" }}
-                                />
-                                <button
-                                  type="button"
-                                  // enable only when OTP input has value
-                                  onClick={verifiyOtp}
-                                  className="login-button flex-1"
-                                >
-                                  Get OTP
-                                </button>
-                              </div>
-
-                              <span className="forgot-password">
-                                <a href="#">Forgot Password?</a>
-                              </span>
-                              <button
-                                disabled={!otp}
-                                // onClick={handleClick}
-                                className={`login-button flex items-center gap-2 ${!otp ? "opacity-50 cursor-not-allowed" : ""
-                                  }`}
+                              <span
+                                className="agreement"
+                                onClick={() => setIsOpen(false)}
                               >
-                                {!otp}
-                                Submit
-                              </button>
-
-                              {/* <input className="login-button" disabled   type="submit" value="Submit" /> */}
-                            </form>
-
-                            <div className="social-account-container">
-                              {/* social buttons if needed */}
+                                <a>Create your account</a>
+                              </span>
+                              <Button
+                                style={{
+                                  background:
+                                    "linear-gradient(0deg, rgba(190, 142, 90, 0.16) 0%, rgba(190, 142, 90, 0.08) 100%)",
+                                  cursor: "pointer",
+                                  fontWeight: "bold",
+                                  borderRadius: "60%",
+                                  marginTop: "10px",
+                                  width: "30px",
+                                  height: "30px",
+                                }}
+                                onClick={() => setShowModal(false)}
+                                className="top-[10px] right-[20px] absolute"
+                              >
+                                X
+                              </Button>
                             </div>
+                          </StyledWrapper>
+                        ) : (
+                          <StyledWrapper>
+                            <div className="container">
+                              <div className="heading">Sign Up</div>
+                              <form onSubmit={handleSubmit1} className="form">
+                                <div className="flex gap-4">
+                                  <input
+                                    onChange={(e) =>
+                                      setSignUpForm((prev) => ({
+                                        ...prev,
+                                        fullname: e.target.value,
+                                      }))
+                                    }
+                                    required
+                                    className="input flex-1"
+                                    type="text"
+                                    name="name"
+                                    id="name"
+                                    placeholder="Full Name"
+                                  />
+                                  <input
+                                    onChange={(e) =>
+                                      setSignUpForm((prev) => ({
+                                        ...prev,
+                                        phone_number: e.target.value,
+                                      }))
+                                    }
+                                    required
+                                    className="input flex-1"
+                                    type="tel"
+                                    name="phone"
+                                    id="phone"
+                                    placeholder="Phone Number"
+                                  />
+                                </div>
 
-                            <span
-                              className="agreement"
-                              onClick={() => setIsOpen(true)}
-                            >
-                              <a>Already Login</a>
-                            </span>
+                                <input
+                                  onChange={(e) =>
+                                    setSignUpForm((prev) => ({
+                                      ...prev,
+                                      email: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                  className="input"
+                                  type="email"
+                                  name="email"
+                                  id="email"
+                                  placeholder="E-mail"
+                                />
 
-                            <Button
-                              style={{
-                                background:
-                                  "linear-gradient(0deg, rgba(190, 142, 90, 0.16) 0%, rgba(190, 142, 90, 0.08) 100%)",
-                                cursor: "pointer",
-                                fontWeight: "bold",
-                                borderRadius: "60%",
-                                marginTop: "10px",
-                                width: "30px",
-                                height: "30px",
-                              }}
-                              onClick={() => setShowModal(false)}
-                              className="top-[10px] right-[20px] absolute"
-                            >
-                              X
-                            </Button>
-                          </div>
-                        </StyledWrapper>
-                      )}
+                                <input
+                                  onChange={(e) =>
+                                    setSignUpForm((prev) => ({
+                                      ...prev,
+                                      password: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                  className="input"
+                                  type="password"
+                                  name="password"
+                                  id="password"
+                                  placeholder="Password"
+                                />
+
+                                <div className="flex gap-4">
+                                  <input
+                                    required
+                                    className="input flex-1"
+                                    type="number"
+                                    name="otp"
+                                    id="otp"
+                                    onChange={(e) =>
+                                      setVerfiyOtp((prev) => ({
+                                        ...prev,
+                                        verifiyOtp: e.target.value,
+                                      }))
+                                    }
+                                    // onChange={()=>{setVerfiyOtp}}
+                                    placeholder="Enter OTP"
+                                    style={{ height: "60px" }}
+                                  />
+                                  <button
+                                    type="button"
+                                    // enable only when OTP input has value
+                                    onClick={verifiyOtp}
+                                    className="login-button flex-1"
+                                  >
+                                    Get OTP
+                                  </button>
+                                </div>
+
+                                <span className="forgot-password">
+                                  <a href="#">Forgot Password?</a>
+                                </span>
+                                <button
+                                  disabled={!otp}
+                                  // onClick={handleClick}
+                                  className={`login-button flex items-center gap-2 ${!otp ? "opacity-50 cursor-not-allowed" : ""
+                                    }`}
+                                >
+                                  {!otp}
+                                  Submit
+                                </button>
+
+                                {/* <input className="login-button" disabled   type="submit" value="Submit" /> */}
+                              </form>
+
+                              <div className="social-account-container">
+                                {/* social buttons if needed */}
+                              </div>
+
+                              <span
+                                className="agreement"
+                                onClick={() => setIsOpen(true)}
+                              >
+                                <a>Already Login</a>
+                              </span>
+
+                              <Button
+                                style={{
+                                  background:
+                                    "linear-gradient(0deg, rgba(190, 142, 90, 0.16) 0%, rgba(190, 142, 90, 0.08) 100%)",
+                                  cursor: "pointer",
+                                  fontWeight: "bold",
+                                  borderRadius: "60%",
+                                  marginTop: "10px",
+                                  width: "30px",
+                                  height: "30px",
+                                }}
+                                onClick={() => setShowModal(false)}
+                                className="top-[10px] right-[20px] absolute"
+                              >
+                                X
+                              </Button>
+                            </div>
+                          </StyledWrapper>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {/* // )} */}
-              </NavigationMenuItem>
+                  )}
+                  {/* // )} */}
+                </NavigationMenuItem>
               </div>
             </SheetContent>
           </Sheet>
