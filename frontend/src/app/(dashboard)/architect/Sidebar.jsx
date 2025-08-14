@@ -33,6 +33,20 @@ import {
   Shield,
   Ticket,
 } from "lucide-react";
+
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"; 
+
+
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 // import { architectLogout } from "@/app/redux/slices/architectSlice/ArchitectAuth";
@@ -59,8 +73,7 @@ const Sidebar = ({
   // };
 
   //  const dispatch = useDispatch();
-const handleLogout = useHandleLogout();
-
+  const handleLogout = useHandleLogout();
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", href: "architect", icon: Home },
@@ -125,7 +138,6 @@ const handleLogout = useHandleLogout();
   };
   return (
     <>
-
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -135,7 +147,6 @@ const handleLogout = useHandleLogout();
         </button>
       </div>
 
-
       <div
         className={`overflow-y-auto overflow-x-hidden fixed top-0 left-0 h-screen bg-white text-gray-500 shadow-2xl z-40 
     transform transition-transform duration-300
@@ -144,7 +155,6 @@ const handleLogout = useHandleLogout();
     ${collapsed ? "w-20" : "w-70"}
   `}
       >
-
         <div className="absolute top-4 right-[-12px] hidden md:block z-50">
           <button
             onClick={() => {
@@ -156,7 +166,6 @@ const handleLogout = useHandleLogout();
             {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
         </div>
-
 
         <div className="p-6 border-b border-gray-500 flex items-center justify-start space-x-2 group">
           <Shield className="w-8 h-8 text-primary transform transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
@@ -183,18 +192,21 @@ const handleLogout = useHandleLogout();
                       //     : "text-gray-500 hover:bg-secondary-foreground active:text-secondary hover:text-primary"
                       // }`}
 
-                      className={`w-full flex items-center ${collapsed ? "justify-center" : "justify-start"
-                        } space-x-3 px-4 py-3  transition-all duration-300 transform hover:translate-x-1 hover:scale-105 border-l-[4px] hover:border-l-primary ${activeSection === item.id
+                      className={`w-full flex items-center ${
+                        collapsed ? "justify-center" : "justify-start"
+                      } space-x-3 px-4 py-3  transition-all duration-300 transform hover:translate-x-1 hover:scale-105 border-l-[4px] hover:border-l-primary ${
+                        activeSection === item.id
                           ? "bg-secondary-foreground text-gray-500"
                           : "text-gray-500 hover:bg-secondary-foreground active:text-secondary hover:text-primary"
-                        }`}
+                      }`}
                     >
                       <item.icon className="w-5 h-5" />
                       {!collapsed && <span>{item.label}</span>}
                       {!collapsed && item.children && (
                         <ChevronRight
-                          className={`ml-auto transform transition-transform duration-300 ${openDropdown === item.id ? "rotate-90" : ""
-                            }`}
+                          className={`ml-auto transform transition-transform duration-300 ${
+                            openDropdown === item.id ? "rotate-90" : ""
+                          }`}
                           size={16}
                         />
                       )}
@@ -213,10 +225,11 @@ const handleLogout = useHandleLogout();
                                   router.push(`/${child.href}`);
                                   if (window.innerWidth < 768) setIsOpen(false);
                                 }}
-                                className={`w-full text-left px-4 py-2 text-sm hover:bg-secondary-foreground transition-all duration-300 transform hover:translate-x-1 hover:scale-105 border-l-[4px] hover:border-l-primary ${activeSection === child.id
-                                  ? "text-gray-500 hover:bg-secondary-foreground hover:text-primary"
-                                  : "text-gray-500 hover:bg-secondary-foreground hover:text-primary"
-                                  }`}
+                                className={`w-full text-left px-4 py-2 text-sm hover:bg-secondary-foreground transition-all duration-300 transform hover:translate-x-1 hover:scale-105 border-l-[4px] hover:border-l-primary ${
+                                  activeSection === child.id
+                                    ? "text-gray-500 hover:bg-secondary-foreground hover:text-primary"
+                                    : "text-gray-500 hover:bg-secondary-foreground hover:text-primary"
+                                }`}
                               >
                                 {child.label}
                               </button>
@@ -235,12 +248,11 @@ const handleLogout = useHandleLogout();
 
         {/* Footer */}
 
-        <div
-           onClick={() => handleLogout("/pages/architect-login")} // your logout function here
+        {/* <div
+          onClick={() => handleLogout("/pages/architect-login")} // your logout function here
           className="cursor-pointer p-3 px-5 border-t border-gray-200 hover:bg-secondary-foreground transition-colors duration-300 flex items-center gap-2 text-amber-100"
           title="Logout"
         >
-          {/* Optional icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 text-primary"
@@ -259,15 +271,63 @@ const handleLogout = useHandleLogout();
           <span className="font-medium text-black hover:text-primary">
             Logout
           </span>
-        </div>
+        </div> */}
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <div
+              className="cursor-pointer p-3 px-5 border-t border-gray-200 hover:bg-secondary-foreground transition-colors duration-300 flex items-center gap-2 text-amber-100"
+              title="Logout"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"
+                />
+              </svg>
+
+              <span className="font-medium text-black hover:text-primary">
+                Logout
+              </span>
+            </div>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to logout?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                You’ll be redirected to the login page after logout.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => handleLogout("/pages/architect-login")}
+              >
+                Logout
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div className="bottom-0 text-xs text-gray-500">
           <div
             className={`pr-2 border-amber-950 hover:bg-secondary-foreground transition-colors duration-300 hover:text-primary`}
           >
             <div
-              className={`flex items-center ${collapsed ? "justify-center" : "space-x-3"
-                }`}
+              className={`flex items-center ${
+                collapsed ? "justify-center" : "space-x-3"
+              }`}
             >
               <div className="m-2 w-8 h-8 rounded-full flex items-center justify-center overflow-hidden transform transition-all duration-300 hover:scale-110 hover:rotate-12">
                 {architect?.profile_url ? (
